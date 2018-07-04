@@ -61,3 +61,6 @@ app.use(
     }
   })
 );
+
+// Connect Flash
+app.use(flash());
