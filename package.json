@@ -1,0 +1,35 @@
+{
+  "name": "loginapp",
+  "version": "1.0.0",
+  "description": "Simple authentication system",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "connect-flash": "*",
+    "cookie-parser": "^1.4.3",
+    "express": "*",
+    "express-handlebars": "*",
+    "express-messages": "*",
+    "express-session": "*",
+    "express-validator": "*",
+    "mongodb": "*",
+    "mongoose": "*",
+    "passport": "*",
+    "passport-http": "*",
+    "passport-local": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fakher92/loginapp.git"
+  },
+  "author": "Fakher Alhamad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fakher92/loginapp/issues"
+  },
+  "homepage": "https://github.com/fakher92/loginapp#readme"
+}
