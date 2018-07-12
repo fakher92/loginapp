@@ -42,6 +42,10 @@ app.use(
   })
 );
 
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Express Validator
 app.use(
   expressValidator({
