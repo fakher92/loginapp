@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 // // Register
-router.get('/register', ensureAuthenticated, function(req, res) {
+router.get('/register', function(req, res) {
   res.render('register');
 });
 
