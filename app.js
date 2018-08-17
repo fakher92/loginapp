@@ -12,6 +12,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
 require('dotenv').config({ path: 'variables.env' });
 
 // mongoose.connect('mongodb://localhost/loginapp');
