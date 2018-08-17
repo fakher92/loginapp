@@ -18,6 +18,11 @@ require('dotenv').config({ path: 'variables.env' });
 // mongoose.connect('mongodb://localhost/loginapp');
 // var db = mongoose.connection;
 //==================================================//
+var routes = require('./routes/index');
+var users = require('./routes/users');
+
+// Init App
+var app = express();
 
 // connect to our database and handle any bad connections
 let mongooseOptions = {};
@@ -49,51 +54,7 @@ mongoose
     process.exit(1);
   });
 
-// load all models
-require('./models/ToDo');
-
-// load the app
-const app = require('./app');
-
-// define SSL/TLS options
-let tlsEnabled = false;
-let tlsOptions = {};
-
-if (
-  process.env.SSL === 'on' &&
-  process.env.SSL_CERT != undefined &&
-  process.env.SSL_KEY != undefined &&
-  process.env.SSL_CERT != '' &&
-  process.env.SSL_KEY != ''
-) {
-  tlsEnabled = true;
-
-  try {
-    tlsOptions = {
-      key: fs.readFileSync(process.env.SSL_KEY),
-      cert: fs.readFileSync(process.env.SSL_CERT)
-    };
-
-    if (process.env.SSL_CHAIN != undefined && process.env.SSL_CHAIN != '') {
-      tlsOptions.ca = fs.readFileSync(process.env.SSL_CHAIN);
-    }
-
-    if (process.env.SSL_DHPARAM != undefined && process.env.SSL_DHPARAM != '') {
-      tlsOptions.dhparam = fs.readFileSync(process.env.SSL_DHPARAM);
-    }
-  } catch (e) {
-    console.error(`\n!!! ${e.message}\n`);
-    console.error('=> SSL could not be enabled. Using fallback.\n');
-    tlsEnabled = false;
-  }
-}
-
 //===================================================//
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
-// Init App
-var app = express();
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
