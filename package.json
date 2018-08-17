@@ -4,6 +4,8 @@
   "description": "Simple authentication system",
   "main": "app.js",
   "scripts": {
+    "start": "node ./app.js",
+    "watch": "nodemon ./start.js --ignore public/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

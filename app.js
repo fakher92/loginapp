@@ -1,5 +1,7 @@
 var express = require('express');
 var path = require('path');
+const fs = require('fs');
+const https = require('https');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
@@ -10,6 +12,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+require('dotenv').config({ path: 'variables.env' });
 
 mongoose.connect('mongodb://localhost/loginapp');
 var db = mongoose.connection;
@@ -36,9 +39,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Express Session
 app.use(
   session({
-    secret: 'secret',
-    saveUninitialized: true,
-    resave: true
+    secret: process.env.SESSION_SECRET || 'notaverysecuresecret',
+    key: process.env.SESSION_KEY || 'notaverysecurekey',
+    resave: false,
+    saveUninitialized: false
   })
 );
 
@@ -82,8 +86,56 @@ app.use('/', routes);
 app.use('/users', users);
 
 // Set Port
-var port = process.env.PORT || 3000;
+// var port = process.env.PORT || 7777;
 
-app.listen(port, function() {
-  console.log('Server started on port ' + port);
-});
+// app.listen(port, function() {
+//   console.log('Server started on port ' + port);
+// });
+
+// define SSL/TLS options
+let tlsEnabled = false;
+let tlsOptions = {};
+
+if (
+  process.env.SSL === 'on' &&
+  process.env.SSL_CERT != undefined &&
+  process.env.SSL_KEY != undefined &&
+  process.env.SSL_CERT != '' &&
+  process.env.SSL_KEY != ''
+) {
+  tlsEnabled = true;
+
+  try {
+    tlsOptions = {
+      key: fs.readFileSync(process.env.SSL_KEY),
+      cert: fs.readFileSync(process.env.SSL_CERT)
+    };
+
+    if (process.env.SSL_CHAIN != undefined && process.env.SSL_CHAIN != '') {
+      tlsOptions.ca = fs.readFileSync(process.env.SSL_CHAIN);
+    }
+
+    if (process.env.SSL_DHPARAM != undefined && process.env.SSL_DHPARAM != '') {
+      tlsOptions.dhparam = fs.readFileSync(process.env.SSL_DHPARAM);
+    }
+  } catch (e) {
+    console.error(`\n!!! ${e.message}\n`);
+    console.error('=> SSL could not be enabled. Using fallback.\n');
+    tlsEnabled = false;
+  }
+}
+
+// start the app
+app.set('port', process.env.PORT || 7777);
+
+if (tlsEnabled === true) {
+  const server = https
+    .createServer(tlsOptions, app)
+    .listen(app.get('port'), () => {
+      console.log(`Express running with TLS → PORT ${server.address().port}`);
+    });
+} else {
+  const server = app.listen(app.get('port'), () => {
+    console.log(`Express running → PORT ${server.address().port}`);
+  });
+}
