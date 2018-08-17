@@ -12,6 +12,7 @@
     "bcryptjs": "*",
     "body-parser": "*",
     "connect-flash": "*",
+    "connect-mongo": "*",
     "cookie-parser": "^1.4.3",
     "dotenv": "^6.0.0",
     "express": "*",
